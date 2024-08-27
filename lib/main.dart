@@ -1,3 +1,5 @@
+import 'package:agritek/crop_farming.dart';
+import 'package:agritek/croptypes.dart';
 import 'package:flutter/material.dart';
 import 'package:agritek/login_page.dart';
 import 'package:agritek/home_page.dart';
@@ -24,7 +26,9 @@ class MyApp extends StatelessWidget {
       home: LoginPage(),
       routes: {
         '/home': (context) => HomePage(),
-      },
+        '/cropfarming': (context) => CropFarming(),
+        '/croptypes': (context) => TypeOfCrops(),
+      }
     );
   }
 }

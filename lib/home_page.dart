@@ -1,177 +1,191 @@
 import 'package:flutter/material.dart';
-import 'package:agritek/styles/app_color.dart';
 
-class Movie {
-  final String title;
-  final String director;
-  final String imageUrl;
-  final double rating;
-
-  Movie({
-    required this.title,
-    required this.director,
-    required this.imageUrl,
-    required this.rating,
-  });
+void main() {
+  runApp(MaterialApp(
+    home: HomePage(),
+    theme: ThemeData(
+      primaryColor: Colors.green, // Matching the purple header color
+    ),
+  ));
 }
 
 class HomePage extends StatelessWidget {
-  final List<Movie> movies = [
-    Movie(
-      title: 'Forrest Gump',
-      director: 'Robert Zemickis',
-      imageUrl: 'assets/images/fgump.jpg',
-      rating: 10,
-    ),
-    Movie(
-      title: 'Fight Club',
-      director: 'david Fincher',
-      imageUrl: 'assets/images/fclub.jpg',
-      rating: 10,
-    ),
-    Movie(
-      title: 'Fantastic Mr. Fox',
-      director: 'Wes Anderson',
-      imageUrl: 'assets/images/fmrfox.jpg',
-      rating: 10,
-    ),
-    Movie(
-      title: 'Avengers: Infinity War',
-      director: 'Anthony and Joe Russo',
-      imageUrl: 'assets/images/infinitywar.jpg',
-      rating: 10,
-    ),
-    Movie(
-      title: 'Whiplash',
-      director: 'Damien Chazelle',
-      imageUrl: 'assets/images/whiplash.jpg',
-      rating: 10,
-    ),
-    Movie(
-      title: 'Grand Budapest Hotel',
-      director: 'Wes Anderson',
-      imageUrl: 'assets/images/ghotel.jpg',
-      rating: 10,
-    ),
-    Movie(
-      title: 'Gone Girl',
-      director: 'David Fincher ',
-      imageUrl: 'assets/images/ggirl.jpg',
-      rating: 10,
-    ),
-    Movie(
-      title: 'Little Women',
-      director: 'Greta Gerwig',
-      imageUrl: 'assets/images/lwomen.jpg',
-      rating: 10,
-    ),
-    Movie(
-      title: 'La La Land',
-      director: 'Damien Chazelle',
-      imageUrl: 'assets/images/lalaland.jpg',
-      rating: 10,
-    ),
-    Movie(
-      title: 'The Shining',
-      director: 'Stanley Kubrick',
-      imageUrl: 'assets/images/shining.jpg',
-      rating: 10,
-    ),
-    Movie(
-      title: 'Eternal Sunshine of the Spotless Mind',
-      director: 'Michel Gondrey',
-      imageUrl: 'assets/images/eternal.jpg',
-      rating: 10,
-    ),
-    Movie(
-      title: 'Spiderman: Across  the Spider-Verse',
-      director: 'Joaquim Dos Santos,Justin Thompson, Kemp Powers',
-      imageUrl: 'assets/images/spiderverse.jpg',
-      rating: 10,
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.background,
       appBar: AppBar(
-        title: Text('My Movie List'),
+        title: Text('AgriTek'),
+        leading: Icon(Icons.menu),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              // Handle search action
+            },
+          ),
+          CircleAvatar(
+            child: Text('A'),
+          ),
+          SizedBox(width: 8),
+        ],
       ),
-      body: GridView.builder(
-        padding: EdgeInsets.all(10),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Sectors of Agriculture',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 16),
+            Expanded(
+              child: GridView.count(
+                crossAxisCount: 2,
+                crossAxisSpacing: 16.0,
+                mainAxisSpacing: 16.0,
+                children: [
+                  SectorCard(
+                    title: 'Crop Farming',
+                    subtitle: 'Production of Crops',
+                    imageUrl: 'assets/images/cropfarming.jpg', // Local asset path
+                    onTitlePressed: () {
+                      // Handle Crop Farming title button press
+                      print('Crop Farming button pressed');
+                      Navigator.pushNamed(context, '/cropfarming');
+                    },
+                  ),
+                  SectorCard(
+                    title: 'Forestry',
+                    subtitle: 'Growing of Trees',
+                    imageUrl: 'assets/images/forestry.jpg', // Local asset path
+                    onTitlePressed: () {
+                      // Handle Forestry title button press
+                      print('Forestry button pressed');
+                       Navigator.pushNamed(context, '/cropfarming');
+                    },
+                  ),
+                  SectorCard(
+                    title: 'Fisheries and Aquaculture',
+                    subtitle: 'Cultivating Aquatic Resources',
+                    imageUrl: 'assets/images/fisheries.jpg', // Local asset path
+                    onTitlePressed: () {
+                      // Handle Fisheries button press
+                      print('Fisheries button pressed');
+                    },
+                  ),
+                  SectorCard(
+                    title: 'Livestock',
+                    subtitle: 'Raising of Domesticated Animals',
+                    imageUrl: 'assets/images/livestock.jpeg', // Local asset path
+                    onTitlePressed: () {
+                      // Handle Livestock button press
+                      print('Livestock button pressed');
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-        itemCount: movies.length,
-        itemBuilder: (context, index) {
-          return _buildMovieItem(context, movies[index]);
-        },
       ),
-    );
-  }
-
-  Widget _buildMovieItem(BuildContext context, Movie movie) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: Offset(0, 3),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white, // Set the background color to green
+        selectedItemColor: Colors.green, // Set the color of the selected item to white
+        unselectedItemColor: Colors.grey, // Set the color of unselected items to a lighter shade of white
+       
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            label: 'Modules',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.forum),
+            label: 'Forums',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications),
+            label: 'Updates',
           ),
         ],
       ),
+    );
+  }
+}
+
+class SectorCard extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final String imageUrl;
+  final VoidCallback onTitlePressed;
+
+  const SectorCard({
+    required this.title,
+    required this.subtitle,
+    required this.imageUrl,
+    required this.onTitlePressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[300], // Background color for the cards
+        borderRadius: BorderRadius.circular(8.0),
+      ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-              child: Image.network(
-                movie.imageUrl,
-                fit: BoxFit.cover,
-                width: double.infinity,
-              ),
-            ),
+          ClipRRect(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(8.0)),
+            child: imageUrl.startsWith('http') || imageUrl.startsWith('https')
+                ? Image.network(
+                    imageUrl,
+                    height: 160,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  )
+                : Image.asset(
+                    imageUrl,
+                    height: 160,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
           ),
           Padding(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  movie.title,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  movie.director,
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-                Row(
-                  children: [
-                    Icon(Icons.star, color: Colors.yellow),
-                    SizedBox(width: 5),
-                    Text(
-                      movie.rating.toString(),
-                      style: TextStyle(
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: TextButton(
+                    onPressed: onTitlePressed,
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.white, // Text color when not hovered
+                      backgroundColor: Colors.green[800], // Background color when not hovered
+                      padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(19.0),
+                      ),
+                      textStyle: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(width: 10),
-                  ],
+                    child: Text(
+                      title,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.black54, // Grey color for subtitles
+                  ),
                 ),
               ],
             ),
@@ -180,10 +194,4 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: HomePage(),
-  ));
 }
