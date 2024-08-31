@@ -7,7 +7,32 @@ class TypeOfCrops extends StatelessWidget {
   }
 }
 
-class TypeOfCropsScreen extends StatelessWidget {
+class TypeOfCropsScreen extends StatefulWidget {
+  @override
+  _TypeOfCropsScreenState createState() => _TypeOfCropsScreenState();
+}
+
+class _TypeOfCropsScreenState extends State<TypeOfCropsScreen> {
+  int _selectedIndex = 0;
+
+  void _onBottomNavItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushNamed(context, '/home');
+        break;
+      case 1:
+        // Navigate to Forums or other screen if needed
+        break;
+      case 2:
+        // Navigate to Updates or other screen if needed
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,23 +65,23 @@ class TypeOfCropsScreen extends StatelessWidget {
         children: [
           ListTile(
             leading: Image.asset(
-              'assets/icons/vegetables.png', // Replace with your asset path
-              width: 40,
-              height: 40,
+              'images/vegetables.jpg',
+              width: 150,
+              height: 150,
             ),
             title: Text('Vegetables'),
             subtitle: Text('A plant or part of a plant used as food.'),
             trailing: Icon(Icons.more_vert),
             onTap: () {
-              // Handle tap action
+              Navigator.pushNamed(context, '/vegetables');
             },
           ),
           Divider(),
           ListTile(
             leading: Image.asset(
-              'assets/icons/fruits.png', // Replace with your asset path
-              width: 40,
-              height: 40,
+              'images/fruits.jpg',
+              width: 150,
+              height: 150,
             ),
             title: Text('Fruits'),
             subtitle: Text(
@@ -69,9 +94,9 @@ class TypeOfCropsScreen extends StatelessWidget {
           Divider(),
           ListTile(
             leading: Image.asset(
-              'assets/icons/grains.png', // Replace with your asset path
-              width: 40,
-              height: 40,
+              'images/grains.jpg',
+              width: 150,
+              height: 150,
             ),
             title: Text('Grains'),
             subtitle: Text('A seed or fruit of a cereal grass.'),
@@ -83,9 +108,9 @@ class TypeOfCropsScreen extends StatelessWidget {
           Divider(),
           ListTile(
             leading: Image.asset(
-              'assets/icons/legumes.png', // Replace with your asset path
-              width: 40,
-              height: 40,
+              'images/legumes.jpg',
+              width: 150,
+              height: 150,
             ),
             title: Text('Legumes'),
             subtitle: Text(
@@ -98,9 +123,9 @@ class TypeOfCropsScreen extends StatelessWidget {
           Divider(),
           ListTile(
             leading: Image.asset(
-              'assets/icons/grass.png', // Replace with your asset path
-              width: 40,
-              height: 40,
+              'images/grass.jpg',
+              width: 150,
+              height: 150,
             ),
             title: Text('Grass'),
             subtitle: Text(
@@ -113,8 +138,10 @@ class TypeOfCropsScreen extends StatelessWidget {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
         selectedItemColor: Colors.green,
         unselectedItemColor: Colors.grey,
+        onTap: _onBottomNavItemTapped,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.view_module),

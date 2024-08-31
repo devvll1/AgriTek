@@ -1,21 +1,66 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MaterialApp(
-    home: HomePage(),
-    theme: ThemeData(
-      primaryColor: Colors.green, // Matching the purple header color
-    ),
-  ));
+  runApp(MyApp());
 }
 
-class HomePage extends StatelessWidget {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+        primaryColor: Colors.green,
+      ),
+      home: HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    // Handle navigation based on the selected index
+    switch (index) {
+      case 0:
+        Navigator.pushNamed(context, '/home');
+        break;
+      case 1:
+        // Navigate to Forums or any other page
+        break;
+      case 2:
+        // Navigate to Updates or any other page
+        break;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    int crossAxisCount = screenWidth < 600
+        ? 2
+        : 3; // Adjust number of columns based on screen width
+
     return Scaffold(
       appBar: AppBar(
         title: Text('AgriTek'),
-        leading: Icon(Icons.menu),
+        leading: Builder(
+          builder: (BuildContext context) => IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              Scaffold.of(context).openDrawer(); // Open the navigation drawer
+            },
+          ),
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.search),
@@ -28,6 +73,53 @@ class HomePage extends StatelessWidget {
           ),
           SizedBox(width: 8),
         ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Text(
+                'AgriTek',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+              decoration: BoxDecoration(
+                color: Colors.green,
+              ),
+            ),
+            ListTile(
+              title: Text('Home'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.pushReplacementNamed(context, '/home');
+              },
+            ),
+            ListTile(
+              title: Text('Add Sector'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.pushNamed(context, '/modules');
+              },
+            ),
+            ListTile(
+              title: Text('Forums'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                // Navigate to Forums or any other page
+              },
+            ),
+            ListTile(
+              title: Text('Updates'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                // Navigate to Updates or any other page
+              },
+            ),
+          ],
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -44,47 +136,45 @@ class HomePage extends StatelessWidget {
             SizedBox(height: 16),
             Expanded(
               child: GridView.count(
-                crossAxisCount: 2,
+                crossAxisCount: crossAxisCount,
                 crossAxisSpacing: 16.0,
                 mainAxisSpacing: 16.0,
                 children: [
                   SectorCard(
                     title: 'Crop Farming',
                     subtitle: 'Production of Crops',
-                    imageUrl: 'assets/images/cropfarming.jpg', // Local asset path
+                    imageUrl: 'assets/images/cropfarming.jpg',
                     onTitlePressed: () {
-                      // Handle Crop Farming title button press
-                      print('Crop Farming button pressed');
                       Navigator.pushNamed(context, '/cropfarming');
                     },
+                    screenWidth: screenWidth,
                   ),
                   SectorCard(
                     title: 'Forestry',
                     subtitle: 'Growing of Trees',
-                    imageUrl: 'assets/images/forestry.jpg', // Local asset path
+                    imageUrl: 'assets/images/forestry.jpg',
                     onTitlePressed: () {
-                      // Handle Forestry title button press
-                      print('Forestry button pressed');
-                       Navigator.pushNamed(context, '/cropfarming');
+                      Navigator.pushNamed(context, '/cropfarming');
                     },
+                    screenWidth: screenWidth,
                   ),
                   SectorCard(
                     title: 'Fisheries and Aquaculture',
                     subtitle: 'Cultivating Aquatic Resources',
-                    imageUrl: 'assets/images/fisheries.jpg', // Local asset path
+                    imageUrl: 'assets/images/fisheries.jpg',
                     onTitlePressed: () {
-                      // Handle Fisheries button press
-                      print('Fisheries button pressed');
+                      Navigator.pushNamed(context, '/cropfarming');
                     },
+                    screenWidth: screenWidth,
                   ),
                   SectorCard(
                     title: 'Livestock',
                     subtitle: 'Raising of Domesticated Animals',
-                    imageUrl: 'assets/images/livestock.jpeg', // Local asset path
+                    imageUrl: 'assets/images/livestock.jpeg',
                     onTitlePressed: () {
-                      // Handle Livestock button press
-                      print('Livestock button pressed');
+                      Navigator.pushNamed(context, '/cropfarming');
                     },
+                    screenWidth: screenWidth,
                   ),
                 ],
               ),
@@ -93,10 +183,11 @@ class HomePage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white, // Set the background color to green
-        selectedItemColor: Colors.green, // Set the color of the selected item to white
-        unselectedItemColor: Colors.grey, // Set the color of unselected items to a lighter shade of white
-       
+        backgroundColor: Colors.white,
+        selectedItemColor: Colors.green,
+        unselectedItemColor: Colors.grey,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.book),
@@ -121,62 +212,58 @@ class SectorCard extends StatelessWidget {
   final String subtitle;
   final String imageUrl;
   final VoidCallback onTitlePressed;
+  final double screenWidth;
 
   const SectorCard({
     required this.title,
     required this.subtitle,
     required this.imageUrl,
     required this.onTitlePressed,
+    required this.screenWidth,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey[300], // Background color for the cards
+        color: Colors.grey[300],
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Column(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(8.0)),
-            child: imageUrl.startsWith('http') || imageUrl.startsWith('https')
-                ? Image.network(
-                    imageUrl,
-                    height: 160,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  )
-                : Image.asset(
-                    imageUrl,
-                    height: 160,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
+          AspectRatio(
+            aspectRatio: 16 / 9,
+            child: ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(8.0)),
+              child: Image.asset(
+                imageUrl,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: TextButton(
-                    onPressed: onTitlePressed,
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.white, // Text color when not hovered
-                      backgroundColor: Colors.green[800], // Background color when not hovered
-                      padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(19.0),
-                      ),
-                      textStyle: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
+                TextButton(
+                  onPressed: onTitlePressed,
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.green[800],
+                    padding: EdgeInsets.symmetric(
+                        vertical: 12.0,
+                        horizontal: screenWidth < 600 ? 15.0 : 20.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(19.0),
                     ),
-                    child: Text(
-                      title,
+                    textStyle: TextStyle(
+                      fontSize: screenWidth < 600 ? 12 : 14,
+                      fontWeight: FontWeight.bold,
                     ),
+                  ),
+                  child: Text(
+                    title,
                   ),
                 ),
                 SizedBox(height: 4),
@@ -184,7 +271,7 @@ class SectorCard extends StatelessWidget {
                   subtitle,
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.black54, // Grey color for subtitles
+                    color: Colors.black54,
                   ),
                 ),
               ],

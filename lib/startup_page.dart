@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/cupertino.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class StartupPage extends StatelessWidget {
+  const StartupPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,8 @@ class LoginPage extends StatelessWidget {
                       Navigator.pushNamed(context, '/home');
                       print('Log in is clicked');
                     },
-                    child: Text('ENTER', style: TextStyle(color: AppColor.white)),
+                    child:
+                        Text('ENTER', style: TextStyle(color: AppColor.white)),
                   ),
                 ),
                 SizedBox(
