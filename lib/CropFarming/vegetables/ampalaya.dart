@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 class Ampalaya extends StatelessWidget {
+  const Ampalaya({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: AmpalayaDetailScreen(),
     );
@@ -11,11 +13,13 @@ class Ampalaya extends StatelessWidget {
 }
 
 class AmpalayaDetailScreen extends StatefulWidget {
+  const AmpalayaDetailScreen({super.key});
+
   @override
-  _AmpalayaDetailScreenState createState() => _AmpalayaDetailScreenState();
+  AmpalayaDetailScreenState createState() => AmpalayaDetailScreenState();
 }
 
-class _AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
+class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
   late TextEditingController _descriptionController;
 
   @override
@@ -51,17 +55,17 @@ class _AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Vegetables'),
+        title: const Text('Vegetables'),
         backgroundColor: Colors.green,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.bookmark_border),
+            icon: const Icon(Icons.bookmark_border),
             onPressed: () {
               // Add bookmark functionality here
             },
@@ -88,19 +92,19 @@ class _AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
                       width: 80,
                       fit: BoxFit.cover,
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             'Ampalaya (Bitter Melon)',
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             'Momordica Charantia',
                             style: TextStyle(
@@ -109,8 +113,8 @@ class _AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
                               color: Colors.grey[600],
                             ),
                           ),
-                          SizedBox(height: 8),
-                          Text(
+                          const SizedBox(height: 8),
+                          const Text(
                             'Published date',
                             style: TextStyle(
                               fontSize: 14,
@@ -125,33 +129,33 @@ class _AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 24),
-            Text(
+            const SizedBox(height: 24),
+            const Text(
               'Description',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Text(
               _descriptionController.text,
               textAlign: TextAlign.justify,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 height: 1.5,
               ),
             ),
-            SizedBox(height: 24),
-            Text(
+            const SizedBox(height: 24),
+            const Text(
               'Materials and Tools Needed:',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8),
-            Text(
+            const SizedBox(height: 8),
+            const Text(
               '• Ampalaya Seeds\n'
               '• Fertilizer\n'
               '• Seedling Trays\n'
@@ -162,21 +166,21 @@ class _AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
                 height: 1.5,
               ),
             ),
-            SizedBox(height: 24),
-            Text(
+            const SizedBox(height: 24),
+            const Text(
               'Step-by-Step Guide to Planting Ampalaya:',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             _buildStepCard(
                 'Step 1: Soil Preparation', 'images/soil_preparation.png'),
             _buildStepCard(
                 'Step 2: Prepare the Soil', 'images/step2_image.png'),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
                 '1. First Plowing/Hoing: Hoe the soil to loosen it.\n'
                 '2. Second Plowing/Hoing: After seven days, plow/hoe the soil again...',
@@ -187,18 +191,18 @@ class _AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             _buildStepCard('Step 3: Install the Trellis', 'images/trellis.png'),
-            SizedBox(height: 24),
-            Divider(),
-            Text(
+            const SizedBox(height: 24),
+            const Divider(),
+            const Text(
               'Explore More Guides',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             _buildGuideCard('Ampalaya Farming: How to Grow Ampalaya',
                 'Feb 15, 2016 - 4:45', 'images/guide1.png'),
             _buildGuideCard(
@@ -212,7 +216,7 @@ class _AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
         selectedItemColor: Colors.green,
         unselectedItemColor: Colors.grey,
         onTap: _onBottomNavItemTapped,
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.view_module),
             label: 'Modules',
@@ -245,7 +249,7 @@ class _AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
               padding: const EdgeInsets.all(12.0),
               child: Text(
                 stepTitle,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),

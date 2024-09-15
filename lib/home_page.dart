@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
         primaryColor: Colors.green,
       ),
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
-  _HomePageState createState() => _HomePageState();
+  HomePageState createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -52,10 +52,10 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('AgriTek'),
+        title: const Text('AgriTek'),
         leading: Builder(
           builder: (BuildContext context) => IconButton(
-            icon: Icon(Icons.menu),
+            icon: const Icon(Icons.menu),
             onPressed: () {
               Scaffold.of(context).openDrawer(); // Open the navigation drawer
             },
@@ -63,22 +63,25 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             onPressed: () {
               // Handle search action
             },
           ),
-          CircleAvatar(
+          const CircleAvatar(
             child: Text('A'),
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
         ],
       ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.green,
+              ),
               child: Text(
                 'AgriTek',
                 style: TextStyle(
@@ -86,33 +89,30 @@ class _HomePageState extends State<HomePage> {
                   fontSize: 24,
                 ),
               ),
-              decoration: BoxDecoration(
-                color: Colors.green,
-              ),
             ),
             ListTile(
-              title: Text('Home'),
+              title: const Text('Home'),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
                 Navigator.pushReplacementNamed(context, '/home');
               },
             ),
             ListTile(
-              title: Text('Add Sector'),
+              title: const Text('Add Sector'),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
                 Navigator.pushNamed(context, '/modules');
               },
             ),
             ListTile(
-              title: Text('Forums'),
+              title: const Text('Forums'),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
                 // Navigate to Forums or any other page
               },
             ),
             ListTile(
-              title: Text('Updates'),
+              title: const Text('Updates'),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
                 // Navigate to Updates or any other page
@@ -126,14 +126,14 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Sectors of Agriculture',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Expanded(
               child: GridView.count(
                 crossAxisCount: crossAxisCount,
@@ -188,7 +188,7 @@ class _HomePageState extends State<HomePage> {
         unselectedItemColor: Colors.grey,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.book),
             label: 'Modules',
@@ -215,6 +215,7 @@ class SectorCard extends StatelessWidget {
   final double screenWidth;
 
   const SectorCard({
+    super.key,
     required this.title,
     required this.subtitle,
     required this.imageUrl,
@@ -234,7 +235,8 @@ class SectorCard extends StatelessWidget {
           AspectRatio(
             aspectRatio: 16 / 9,
             child: ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(8.0)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(8.0)),
               child: Image.asset(
                 imageUrl,
                 width: double.infinity,
@@ -266,10 +268,10 @@ class SectorCard extends StatelessWidget {
                     title,
                   ),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(
                   subtitle,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 12,
                     color: Colors.black54,
                   ),

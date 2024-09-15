@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 
-class TypeOfCrops extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return TypeOfCropsScreen();
-  }
-}
-
 class TypeOfCropsScreen extends StatefulWidget {
+  const TypeOfCropsScreen({super.key});
+
   @override
-  _TypeOfCropsScreenState createState() => _TypeOfCropsScreenState();
+  TypeOfCropsScreenState createState() => TypeOfCropsScreenState();
 }
 
-class _TypeOfCropsScreenState extends State<TypeOfCropsScreen> {
+class TypeOfCropsScreenState extends State<TypeOfCropsScreen> {
   int _selectedIndex = 0;
 
   void _onBottomNavItemTapped(int index) {
@@ -37,23 +32,23 @@ class _TypeOfCropsScreenState extends State<TypeOfCropsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Type of Crops"),
+        title: const Text("Type of Crops"),
         backgroundColor: Colors.green,
         actions: [
           IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             onPressed: () {
               // Handle search action
             },
           ),
           IconButton(
-            icon: Icon(Icons.bookmark_border),
+            icon: const Icon(Icons.bookmark_border),
             onPressed: () {
               // Handle bookmark action
             },
           ),
           IconButton(
-            icon: Icon(Icons.more_vert),
+            icon: const Icon(Icons.more_vert),
             onPressed: () {
               // Handle more options action
             },
@@ -69,68 +64,68 @@ class _TypeOfCropsScreenState extends State<TypeOfCropsScreen> {
               width: 150,
               height: 150,
             ),
-            title: Text('Vegetables'),
-            subtitle: Text('A plant or part of a plant used as food.'),
-            trailing: Icon(Icons.more_vert),
+            title: const Text('Vegetables'),
+            subtitle: const Text('A plant or part of a plant used as food.'),
+            trailing: const Icon(Icons.more_vert),
             onTap: () {
               Navigator.pushNamed(context, '/vegetables');
             },
           ),
-          Divider(),
+          const Divider(),
           ListTile(
             leading: Image.asset(
               'images/fruits.jpg',
               width: 150,
               height: 150,
             ),
-            title: Text('Fruits'),
-            subtitle: Text(
+            title: const Text('Fruits'),
+            subtitle: const Text(
                 'The sweet and fleshy product of a tree or other plant that contains seed and can be eaten as food.'),
-            trailing: Icon(Icons.more_vert),
+            trailing: const Icon(Icons.more_vert),
             onTap: () {
               // Handle tap action
             },
           ),
-          Divider(),
+          const Divider(),
           ListTile(
             leading: Image.asset(
               'images/grains.jpg',
               width: 150,
               height: 150,
             ),
-            title: Text('Grains'),
-            subtitle: Text('A seed or fruit of a cereal grass.'),
-            trailing: Icon(Icons.more_vert),
+            title: const Text('Grains'),
+            subtitle: const Text('A seed or fruit of a cereal grass.'),
+            trailing: const Icon(Icons.more_vert),
             onTap: () {
               // Handle tap action
             },
           ),
-          Divider(),
+          const Divider(),
           ListTile(
             leading: Image.asset(
               'images/legumes.jpg',
               width: 150,
               height: 150,
             ),
-            title: Text('Legumes'),
-            subtitle: Text(
+            title: const Text('Legumes'),
+            subtitle: const Text(
                 'The fruit or seed of leguminous plants (as peas or beans) used for food.'),
-            trailing: Icon(Icons.more_vert),
+            trailing: const Icon(Icons.more_vert),
             onTap: () {
               // Handle tap action
             },
           ),
-          Divider(),
+          const Divider(),
           ListTile(
             leading: Image.asset(
               'images/grass.jpg',
               width: 150,
               height: 150,
             ),
-            title: Text('Grass'),
-            subtitle: Text(
+            title: const Text('Grass'),
+            subtitle: const Text(
                 'Green plants that grow in the ground, used as feed for animals or for lawns.'),
-            trailing: Icon(Icons.more_vert),
+            trailing: const Icon(Icons.more_vert),
             onTap: () {
               // Handle tap action
             },
@@ -142,7 +137,7 @@ class _TypeOfCropsScreenState extends State<TypeOfCropsScreen> {
         selectedItemColor: Colors.green,
         unselectedItemColor: Colors.grey,
         onTap: _onBottomNavItemTapped,
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.view_module),
             label: 'Modules',

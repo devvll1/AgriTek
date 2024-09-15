@@ -42,11 +42,11 @@ class VegetablesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Vegetables'),
+        title: const Text('Vegetables'),
         backgroundColor: Colors.green,
         actions: [
           IconButton(
-            icon: Icon(Icons.bookmark_border),
+            icon: const Icon(Icons.bookmark_border),
             onPressed: () {
               // Add bookmark functionality here
             },
@@ -55,8 +55,8 @@ class VegetablesScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(15.0),
+          const Padding(
+            padding: EdgeInsets.all(15.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -72,7 +72,7 @@ class VegetablesScreen extends StatelessWidget {
               itemCount: vegetables.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  contentPadding: EdgeInsets.all(19.0),
+                  contentPadding: const EdgeInsets.all(19.0),
                   leading: Image.asset(
                     vegetables[index]['image']!,
                     width: 80,
@@ -80,7 +80,7 @@ class VegetablesScreen extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                   title: Text(vegetables[index]['name']!),
-                  trailing: Icon(Icons.more_vert),
+                  trailing: const Icon(Icons.more_vert),
                   onTap: () {
                     // Navigate to details page or perform action
                     if (vegetables[index]['name'] ==
@@ -98,7 +98,7 @@ class VegetablesScreen extends StatelessWidget {
         selectedItemColor: Colors.green,
         unselectedItemColor: Colors.grey,
         onTap: (index) => _onBottomNavItemTapped(context, index),
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.view_module),
             label: 'Modules',
