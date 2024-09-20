@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class CropFarmingScreen extends StatefulWidget {
-  const CropFarmingScreen({super.key});
+class ForestryScreen extends StatefulWidget {
+  const ForestryScreen({super.key});
 
   @override
-  CropFarmingScreenState createState() => CropFarmingScreenState();
+  ForestryScreenState createState() => ForestryScreenState();
 }
 
-class CropFarmingScreenState extends State<CropFarmingScreen> {
+class ForestryScreenState extends State<ForestryScreen> {
   final String _description =
-      'Crop farming is the large-scale production of crops. Conventional farming uses pesticides, herbicides, and other chemicals, while organic farming avoids them. The types of crops grown in different regions depend on climate, soil conditions, and demand. Plant growth is influenced by rainfall and temperature, so certain crops only thrive in specific climates.';
+      'Tree planting is the process of transplanting tree seedlings, generally for forestry, land reclamation, or landscaping purposes. It differs from the transplantation of larger trees in arboriculture and from the lower-cost but slower and less reliable distribution of tree seeds.';
 
   void _onBottomNavItemTapped(int index) {
     switch (index) {
@@ -30,7 +30,7 @@ class CropFarmingScreenState extends State<CropFarmingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Crop Farming"),
+        title: const Text("Forestry"),
         backgroundColor: Colors.green,
       ),
       body: Padding(
@@ -48,7 +48,7 @@ class CropFarmingScreenState extends State<CropFarmingScreen> {
                 child: Row(
                   children: [
                     Image.asset(
-                      'assets/images/cropfarming.jpg',
+                      'assets/images/forestry.jpg',
                       height: 100,
                       width: 100,
                       fit: BoxFit.cover,
@@ -59,7 +59,7 @@ class CropFarmingScreenState extends State<CropFarmingScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Crop Farming',
+                            'Forestry',
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -67,7 +67,7 @@ class CropFarmingScreenState extends State<CropFarmingScreen> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Production of Crops',
+                            'Growing of Trees',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.grey[600],
@@ -97,7 +97,8 @@ class CropFarmingScreenState extends State<CropFarmingScreen> {
               ),
             ),
             const Spacer(),
-            Center(
+            SizedBox(
+              width: double.infinity, // Make the button fill the width
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/croptypes');
@@ -116,7 +117,7 @@ class CropFarmingScreenState extends State<CropFarmingScreen> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                child: const Text('View Types of Crops'),
+                child: const Text('View List Of Trees'),
               ),
             ),
           ],

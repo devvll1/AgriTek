@@ -32,7 +32,7 @@ class StartupPage extends StatelessWidget {
                         onPressed: () {
                           Navigator.pushNamed(context,
                               '/home'); // Change navigation route as needed
-                          print('Skip button clicked');
+                          
                         },
                         child: const Text(
                           "Skip",
@@ -135,7 +135,7 @@ class StartupPage extends StatelessWidget {
                       ),
                       onPressed: () {
                         Navigator.pushNamed(context, '/home');
-                        print('ENTER button clicked');
+                        
                       },
                       child: const Text(
                         'Sign-In',

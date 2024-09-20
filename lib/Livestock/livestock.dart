@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class CropFarmingScreen extends StatefulWidget {
-  const CropFarmingScreen({super.key});
+class LivestockScreen extends StatefulWidget {
+  const LivestockScreen({super.key});
 
   @override
-  CropFarmingScreenState createState() => CropFarmingScreenState();
+  LivestockScreenState createState() => LivestockScreenState();
 }
 
-class CropFarmingScreenState extends State<CropFarmingScreen> {
+class LivestockScreenState extends State<LivestockScreen> {
   final String _description =
-      'Crop farming is the large-scale production of crops. Conventional farming uses pesticides, herbicides, and other chemicals, while organic farming avoids them. The types of crops grown in different regions depend on climate, soil conditions, and demand. Plant growth is influenced by rainfall and temperature, so certain crops only thrive in specific climates.';
+      'Livestock are the domesticated animals raised in an agricultural setting in order to provide labour and produce diversified products for consumption such as meat, eggs, milk, fur, leather, and wool. The term is sometimes used to refer solely to animals who are raised for consumption, and sometimes used to refer solely to farmed ruminants, such as cattle, sheep, and goats.';
 
   void _onBottomNavItemTapped(int index) {
     switch (index) {
@@ -30,7 +30,7 @@ class CropFarmingScreenState extends State<CropFarmingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Crop Farming"),
+        title: const Text("Livestock"),
         backgroundColor: Colors.green,
       ),
       body: Padding(
@@ -48,7 +48,7 @@ class CropFarmingScreenState extends State<CropFarmingScreen> {
                 child: Row(
                   children: [
                     Image.asset(
-                      'assets/images/cropfarming.jpg',
+                      'assets/images/livestock.jpeg',
                       height: 100,
                       width: 100,
                       fit: BoxFit.cover,
@@ -59,7 +59,7 @@ class CropFarmingScreenState extends State<CropFarmingScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Crop Farming',
+                            'Livestock',
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -67,7 +67,7 @@ class CropFarmingScreenState extends State<CropFarmingScreen> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Production of Crops',
+                            'Raising of Domesticated Animals',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.grey[600],
@@ -97,17 +97,18 @@ class CropFarmingScreenState extends State<CropFarmingScreen> {
               ),
             ),
             const Spacer(),
-            Center(
+            SizedBox(
+              width: double.infinity, // This makes the button fill the width
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/croptypes');
-                 
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(
-                      vertical: 16.0, horizontal: 32.0),
+                    vertical: 16.0, horizontal: 32.0,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -116,7 +117,7 @@ class CropFarmingScreenState extends State<CropFarmingScreen> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                child: const Text('View Types of Crops'),
+                child: const Text('View List Of Livestock'),
               ),
             ),
           ],

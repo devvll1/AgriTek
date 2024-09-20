@@ -38,7 +38,7 @@ class HomePageState extends State<HomePage> {
         // Navigate to Forums or any other page
         break;
       case 2:
-        // Navigate to Updates or any other page
+        Navigator.pushNamed(context, '/weather');
         break;
     }
   }
@@ -154,7 +154,7 @@ class HomePageState extends State<HomePage> {
                     subtitle: 'Growing of Trees',
                     imageUrl: 'assets/images/forestry.jpg',
                     onTitlePressed: () {
-                      Navigator.pushNamed(context, '/cropfarming');
+                      Navigator.pushNamed(context, '/forestry');
                     },
                     screenWidth: screenWidth,
                   ),
@@ -163,7 +163,7 @@ class HomePageState extends State<HomePage> {
                     subtitle: 'Cultivating Aquatic Resources',
                     imageUrl: 'assets/images/fisheries.jpg',
                     onTitlePressed: () {
-                      Navigator.pushNamed(context, '/cropfarming');
+                      Navigator.pushNamed(context, '/aquaculture');
                     },
                     screenWidth: screenWidth,
                   ),
@@ -172,7 +172,7 @@ class HomePageState extends State<HomePage> {
                     subtitle: 'Raising of Domesticated Animals',
                     imageUrl: 'assets/images/livestock.jpeg',
                     onTitlePressed: () {
-                      Navigator.pushNamed(context, '/cropfarming');
+                      Navigator.pushNamed(context, '/livestock');
                     },
                     screenWidth: screenWidth,
                   ),

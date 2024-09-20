@@ -3,6 +3,10 @@ import 'package:agritek/CropFarming/crop_farming.dart';
 import 'package:agritek/CropFarming/croptypes.dart';
 import 'package:agritek/CropFarming/vegetables/ampalaya.dart';
 import 'package:agritek/CropFarming/vegetables/vegetable.dart';
+import 'package:agritek/FIsheries%20and%20Aquaculture/fisheries.dart';
+import 'package:agritek/Forestry/forestry.dart';
+import 'package:agritek/Livestock/livestock.dart';
+import 'package:agritek/Updates/weather.dart';
 import 'package:flutter/material.dart';
 import 'package:agritek/home_page.dart';
 import 'package:agritek/startup_page.dart';
@@ -40,9 +44,13 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const LoginPage(),
         '/home': (context) => const HomePage(),
         '/cropfarming': (context) => const CropFarmingScreen(),
+        '/forestry' : (context) => const ForestryScreen(),
+        '/aquaculture' : (context) => const AquacultureScreen(),
+        '/livestock' : (context) => const LivestockScreen(),
         '/croptypes': (context) => const TypeOfCropsScreen(),
         '/vegetables': (context) => const VegetablesApp(),
         '/ampalaya': (context) => const Ampalaya(),
+        '/weather' : (context) => const WeatherScreen()
       },
     );
   }

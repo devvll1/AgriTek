@@ -28,6 +28,31 @@ class TypeOfCropsScreenState extends State<TypeOfCropsScreen> {
     }
   }
 
+  Widget _buildCropTile(String imagePath, String title, String subtitle, String routeName) {
+    return Column(
+      children: [
+        ListTile(
+          leading: ClipRRect(
+            borderRadius: BorderRadius.circular(8), // Adjusts for a square crop
+            child: Image.asset(
+              imagePath,
+              width: 100,
+              height: 100,
+              fit: BoxFit.cover, // Crops and fits the image within the container
+            ),
+          ),
+          title: Text(title),
+          subtitle: Text(subtitle),
+          trailing: const Icon(Icons.more_vert),
+          onTap: () {
+            Navigator.pushNamed(context, routeName);
+          },
+        ),
+        const Divider(),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,77 +83,35 @@ class TypeOfCropsScreenState extends State<TypeOfCropsScreen> {
       body: ListView(
         padding: const EdgeInsets.all(8.0),
         children: [
-          ListTile(
-            leading: Image.asset(
-              'images/vegetables.jpg',
-              width: 150,
-              height: 150,
-            ),
-            title: const Text('Vegetables'),
-            subtitle: const Text('A plant or part of a plant used as food.'),
-            trailing: const Icon(Icons.more_vert),
-            onTap: () {
-              Navigator.pushNamed(context, '/vegetables');
-            },
+          _buildCropTile(
+            'images/vegetables.jpg',
+            'Vegetables',
+            'A plant or part of a plant used as food.',
+            '/vegetables',
           ),
-          const Divider(),
-          ListTile(
-            leading: Image.asset(
-              'images/fruits.jpg',
-              width: 150,
-              height: 150,
-            ),
-            title: const Text('Fruits'),
-            subtitle: const Text(
-                'The sweet and fleshy product of a tree or other plant that contains seed and can be eaten as food.'),
-            trailing: const Icon(Icons.more_vert),
-            onTap: () {
-              // Handle tap action
-            },
+          _buildCropTile(
+            'images/fruits.jpg',
+            'Fruits',
+            'The sweet and fleshy product of a tree or other plant that contains seed and can be eaten as food.',
+            '/fruits',
           ),
-          const Divider(),
-          ListTile(
-            leading: Image.asset(
-              'images/grains.jpg',
-              width: 150,
-              height: 150,
-            ),
-            title: const Text('Grains'),
-            subtitle: const Text('A seed or fruit of a cereal grass.'),
-            trailing: const Icon(Icons.more_vert),
-            onTap: () {
-              // Handle tap action
-            },
+          _buildCropTile(
+            'images/grains.jpg',
+            'Grains',
+            'A seed or fruit of a cereal grass.',
+            '/grains',
           ),
-          const Divider(),
-          ListTile(
-            leading: Image.asset(
-              'images/legumes.jpg',
-              width: 150,
-              height: 150,
-            ),
-            title: const Text('Legumes'),
-            subtitle: const Text(
-                'The fruit or seed of leguminous plants (as peas or beans) used for food.'),
-            trailing: const Icon(Icons.more_vert),
-            onTap: () {
-              // Handle tap action
-            },
+          _buildCropTile(
+            'images/legumes.jpg',
+            'Legumes',
+            'The fruit or seed of leguminous plants (as peas or beans) used for food.',
+            '/legumes',
           ),
-          const Divider(),
-          ListTile(
-            leading: Image.asset(
-              'images/grass.jpg',
-              width: 150,
-              height: 150,
-            ),
-            title: const Text('Grass'),
-            subtitle: const Text(
-                'Green plants that grow in the ground, used as feed for animals or for lawns.'),
-            trailing: const Icon(Icons.more_vert),
-            onTap: () {
-              // Handle tap action
-            },
+          _buildCropTile(
+            'images/grass.jpg',
+            'Grass',
+            'Green plants that grow in the ground, used as feed for animals or for lawns.',
+            '/grass',
           ),
         ],
       ),

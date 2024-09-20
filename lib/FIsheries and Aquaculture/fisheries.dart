@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class CropFarmingScreen extends StatefulWidget {
-  const CropFarmingScreen({super.key});
+class AquacultureScreen extends StatefulWidget {
+  const AquacultureScreen({super.key});
 
   @override
-  CropFarmingScreenState createState() => CropFarmingScreenState();
+  AquacultureScreenState createState() => AquacultureScreenState();
 }
 
-class CropFarmingScreenState extends State<CropFarmingScreen> {
+class AquacultureScreenState extends State<AquacultureScreen> {
   final String _description =
-      'Crop farming is the large-scale production of crops. Conventional farming uses pesticides, herbicides, and other chemicals, while organic farming avoids them. The types of crops grown in different regions depend on climate, soil conditions, and demand. Plant growth is influenced by rainfall and temperature, so certain crops only thrive in specific climates.';
+      'Also known as aquafarming, is the controlled cultivation ("farming") of aquatic organisms such as fish, crustaceans, mollusks, algae and other organisms of value such as aquatic plants (e.g. lotus). Aquaculture involves cultivating freshwater, brackish water, and saltwater populations under controlled or semi-natural conditions and can be contrasted with commercial fishing, which is the harvesting of wild fish. Aquaculture is also a practice used for restoring and rehabilitating marine and freshwater ecosystems. ';
 
   void _onBottomNavItemTapped(int index) {
     switch (index) {
@@ -30,7 +30,7 @@ class CropFarmingScreenState extends State<CropFarmingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Crop Farming"),
+        title: const Text("Aquaculture"),
         backgroundColor: Colors.green,
       ),
       body: Padding(
@@ -48,7 +48,7 @@ class CropFarmingScreenState extends State<CropFarmingScreen> {
                 child: Row(
                   children: [
                     Image.asset(
-                      'assets/images/cropfarming.jpg',
+                      'assets/images/fisheries.jpg',
                       height: 100,
                       width: 100,
                       fit: BoxFit.cover,
@@ -59,7 +59,7 @@ class CropFarmingScreenState extends State<CropFarmingScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Crop Farming',
+                            'Aquaculture',
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -67,7 +67,7 @@ class CropFarmingScreenState extends State<CropFarmingScreen> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Production of Crops',
+                            'Cultivation of Aquatic Resources',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.grey[600],
@@ -97,11 +97,12 @@ class CropFarmingScreenState extends State<CropFarmingScreen> {
               ),
             ),
             const Spacer(),
-            Center(
+            SizedBox(
+              width: double.infinity, // Make the button fill the width
               child: ElevatedButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/croptypes');
-                 
+                  
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
@@ -116,7 +117,7 @@ class CropFarmingScreenState extends State<CropFarmingScreen> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                child: const Text('View Types of Crops'),
+                child: const Text('View Types Of Aquaculture'),
               ),
             ),
           ],

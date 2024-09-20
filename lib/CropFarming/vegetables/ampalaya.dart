@@ -5,10 +5,8 @@ class Ampalaya extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: AmpalayaDetailScreen(),
-    );
+    // Remove MaterialApp from here
+    return const AmpalayaDetailScreen();
   }
 }
 
@@ -60,7 +58,7 @@ class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context); // Proper back navigation
           },
         ),
         actions: [
