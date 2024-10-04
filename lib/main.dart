@@ -1,4 +1,4 @@
-import 'package:agritek/Auth/login.dart';
+import 'package:agritek/Authentication/widget_tree.dart';
 import 'package:agritek/CropFarming/crop_farming.dart';
 import 'package:agritek/CropFarming/croptypes.dart';
 import 'package:agritek/CropFarming/vegetables/ampalaya.dart';
@@ -39,9 +39,9 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: AppColor.background,
         // You can add more theme properties here
       ),
-      home: const StartupPage(),
+      home: const WidgetTree(),
       routes: {
-        '/register': (context) => const LoginPage(),
+        '/login': (context) => const StartupPage(),
         '/home': (context) => const HomePage(),
         '/cropfarming': (context) => const CropFarmingScreen(),
         '/forestry' : (context) => const ForestryScreen(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:agritek/Authentication/auth.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -16,6 +17,10 @@ class MyApp extends StatelessWidget {
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  Future<void> signOut() async {
+    await Auth().signOut();
+  }
 
   @override
   HomePageState createState() => HomePageState();
@@ -98,24 +103,25 @@ class HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              title: const Text('Add Sector'),
-              onTap: () {
-                Navigator.pop(context); // Close the drawer
-                Navigator.pushNamed(context, '/modules');
-              },
-            ),
-            ListTile(
               title: const Text('Forums'),
               onTap: () {
                 Navigator.pop(context); // Close the drawer
-                // Navigate to Forums or any other page
+                Navigator.pushNamed(context, '');
               },
             ),
             ListTile(
               title: const Text('Updates'),
               onTap: () {
+                // Close the drawer
+                Navigator.pushNamed(context, '/weather');
+              },
+            ),
+            ListTile(
+              title: const Text('Logout'),
+              onTap: () async {
                 Navigator.pop(context); // Close the drawer
-                // Navigate to Updates or any other page
+                await widget.signOut(); // Call the sign-out method
+                Navigator.pushReplacementNamed(context, '/login'); // Navigate to login after sign-out
               },
             ),
           ],
