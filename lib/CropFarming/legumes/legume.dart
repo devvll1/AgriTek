@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const VegetablesApp());
+  runApp(const LegumesApp());
 }
 
-class VegetablesApp extends StatelessWidget {
-  const VegetablesApp({super.key});
+class LegumesApp extends StatelessWidget {
+  const LegumesApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return VegetablesScreen();
+    return LegumesScreen();
   }
 }
 
-class VegetablesScreen extends StatelessWidget {
-  final List<Map<String, String>> vegetables = [
-    {'name': 'Ampalaya (Bitter Melon)', 'image': 'images/vegetables/Ampalaya.png'},
-    {'name': 'Upo (Bottle Gourd)', 'image': 'images/vegetables/Upo.jpg'},
-    {'name': 'Sayote (Chayote)', 'image': 'images/vegetables/Sayote.jpg'},
-    {'name': 'Talong (Eggplant)', 'image': 'images/vegetables/Talong.jpg'},
-    {'name': 'Okra', 'image': 'images/vegetables/Okra.jpg'},
+class LegumesScreen extends StatelessWidget {
+  final List<Map<String, String>> legumes = [
+    {'name': 'Mango', 'image': 'images/legumes/mango.jpg'},
+    {'name': 'Upo (Bottle Gourd)', 'image': 'images/Upo.jpg'},
+    {'name': 'Sayote (Chayote)', 'image': 'images/Sayote.jpg'},
+    {'name': 'Talong (Eggplant)', 'image': 'images/Talong.jpg'},
+    {'name': 'Okra', 'image': 'images/Okra.jpg'},
   ];
 
-  VegetablesScreen({super.key});
+  LegumesScreen({super.key});
 
   void _onBottomNavItemTapped(BuildContext context, int index) {
     switch (index) {
@@ -30,10 +30,10 @@ class VegetablesScreen extends StatelessWidget {
         Navigator.pushNamed(context, '/home'); // Replace with actual HomePage
         break;
       case 1:
-        // Handle navigation to Forums
+
         break;
       case 2:
-        // Handle navigation to Updates
+        Navigator.pushNamed(context, '/weather');
         break;
     }
   }
@@ -42,7 +42,7 @@ class VegetablesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Vegetables'),
+        title: const Text('Legumes'),
         backgroundColor: Colors.green,
         actions: [
           IconButton(
@@ -61,7 +61,7 @@ class VegetablesScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Choose a Vegetable',
+                  'Choose a Grain',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ],
@@ -69,27 +69,23 @@ class VegetablesScreen extends StatelessWidget {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: vegetables.length,
+              itemCount: legumes.length,
               itemBuilder: (context, index) {
                 return ListTile(
                   contentPadding: const EdgeInsets.all(19.0),
                   leading: Image.asset(
-                    vegetables[index]['image']!,
+                    legumes[index]['image']!,
                     width: 80,
                     height: 100, // Increased height for the image
                     fit: BoxFit.cover,
                   ),
-                  title: Text(vegetables[index]['name']!),
+                  title: Text(legumes[index]['name']!),
                   trailing: const Icon(Icons.more_vert),
                   onTap: () {
                     // Navigate to details page or perform action
-                    if (vegetables[index]['name'] ==
-                        'Ampalaya (Bitter Melon)') {
-                      Navigator.pushNamed(context, '/ampalaya');
-                    }
-                    if (vegetables[index]['name'] ==
-                        'Upo (Bottle Gourd)') {
-                      Navigator.pushNamed(context, '/upo');
+                    if (legumes[index]['name'] ==
+                        'Mango') {
+                      Navigator.pushNamed(context, '/mango');
                     }
                   },
                 );

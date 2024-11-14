@@ -1,28 +1,24 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const VegetablesApp());
+  runApp(const FruitsApp());
 }
 
-class VegetablesApp extends StatelessWidget {
-  const VegetablesApp({super.key});
+class FruitsApp extends StatelessWidget {
+  const FruitsApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return VegetablesScreen();
+    return FruitsScreen();
   }
 }
 
-class VegetablesScreen extends StatelessWidget {
-  final List<Map<String, String>> vegetables = [
-    {'name': 'Ampalaya (Bitter Melon)', 'image': 'images/vegetables/Ampalaya.png'},
-    {'name': 'Upo (Bottle Gourd)', 'image': 'images/vegetables/Upo.jpg'},
-    {'name': 'Sayote (Chayote)', 'image': 'images/vegetables/Sayote.jpg'},
-    {'name': 'Talong (Eggplant)', 'image': 'images/vegetables/Talong.jpg'},
-    {'name': 'Okra', 'image': 'images/vegetables/Okra.jpg'},
+class FruitsScreen extends StatelessWidget {
+  final List<Map<String, String>> fruits = [
+    {'name': 'Mango', 'image': 'images/fruits/mango.jpg'},
   ];
 
-  VegetablesScreen({super.key});
+  FruitsScreen({super.key});
 
   void _onBottomNavItemTapped(BuildContext context, int index) {
     switch (index) {
@@ -42,7 +38,7 @@ class VegetablesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Vegetables'),
+        title: const Text('Fruits'),
         backgroundColor: Colors.green,
         actions: [
           IconButton(
@@ -61,7 +57,7 @@ class VegetablesScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Choose a Vegetable',
+                  'Choose a Fruit',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ],
@@ -69,27 +65,23 @@ class VegetablesScreen extends StatelessWidget {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: vegetables.length,
+              itemCount: fruits.length,
               itemBuilder: (context, index) {
                 return ListTile(
                   contentPadding: const EdgeInsets.all(19.0),
                   leading: Image.asset(
-                    vegetables[index]['image']!,
+                    fruits[index]['image']!,
                     width: 80,
                     height: 100, // Increased height for the image
                     fit: BoxFit.cover,
                   ),
-                  title: Text(vegetables[index]['name']!),
+                  title: Text(fruits[index]['name']!),
                   trailing: const Icon(Icons.more_vert),
                   onTap: () {
                     // Navigate to details page or perform action
-                    if (vegetables[index]['name'] ==
-                        'Ampalaya (Bitter Melon)') {
-                      Navigator.pushNamed(context, '/ampalaya');
-                    }
-                    if (vegetables[index]['name'] ==
-                        'Upo (Bottle Gourd)') {
-                      Navigator.pushNamed(context, '/upo');
+                    if (fruits[index]['name'] ==
+                        'Mango') {
+                      Navigator.pushNamed(context, '/mango');
                     }
                   },
                 );

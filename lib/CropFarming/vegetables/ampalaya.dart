@@ -1,11 +1,123 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+class GuideCard extends StatefulWidget {
+  final String videoId;
+
+  const GuideCard({super.key, required this.videoId});
+
+  @override
+  _GuideCardState createState() => _GuideCardState();
+}
+
+class _GuideCardState extends State<GuideCard> {
+  String title = 'Loading...';
+  String publishedDate = 'Loading...';
+  String runtime = 'Loading...';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchVideoDetails(widget.videoId);
+  }
+
+  Future<void> fetchVideoDetails(String videoId) async {
+    const String apiKey = 'AIzaSyCiu2BV_raUsRj2X9ZJxohqzdxXJlUiGQU';
+    final String url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=$videoId&key=$apiKey';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final videoInfo = data['items'][0];
+
+        setState(() {
+          title = videoInfo['snippet']['title'];
+          publishedDate = videoInfo['snippet']['publishedAt'].substring(0, 10); // Extracting date part
+          runtime = _convertDuration(videoInfo['contentDetails']['duration']);
+        });
+      } else {
+        throw Exception('Failed to load video details');
+      }
+    } catch (e) {
+      print('Error fetching video details: $e');
+    }
+  }
+
+  // Helper function to convert ISO 8601 duration (e.g., PT4M13S) to a readable format (e.g., 4:13)
+  String _convertDuration(String isoDuration) {
+    final regex = RegExp(r'PT(\d+H)?(\d+M)?(\d+S)?');
+    final match = regex.firstMatch(isoDuration);
+
+    if (match == null) return 'Unknown';
+
+    final hours = match.group(1) != null ? int.parse(match.group(1)!.replaceAll('H', '')) : 0;
+    final minutes = match.group(2) != null ? int.parse(match.group(2)!.replaceAll('M', '')) : 0;
+    final seconds = match.group(3) != null ? int.parse(match.group(3)!.replaceAll('S', '')) : 0;
+
+    final formattedMinutes = minutes.toString().padLeft(2, '0');
+    final formattedSeconds = seconds.toString().padLeft(2, '0');
+    return hours > 0 ? '$hours:$formattedMinutes:$formattedSeconds' : '$formattedMinutes:$formattedSeconds';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    String thumbnailUrl = 'https://img.youtube.com/vi/${widget.videoId}/0.jpg';
+
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      child: ListTile(
+        leading: Image.network(
+          thumbnailUrl,
+          width: 100,
+          height: 100,
+          fit: BoxFit.cover,
+        ),
+        title: Text(title),
+        subtitle: Text('Published on $publishedDate\nDuration: $runtime'),
+        onTap: () {
+          _showYoutubePlayerDialog(widget.videoId);
+        },
+      ),
+    );
+  }
+
+  void _showYoutubePlayerDialog(String videoId) {
+    YoutubePlayerController _controller = YoutubePlayerController(
+      initialVideoId: videoId,
+      flags: YoutubePlayerFlags(
+        autoPlay: true,
+        mute: false,
+      ),
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.zero,
+          content: YoutubePlayer(
+            controller: _controller,
+            showVideoProgressIndicator: true,
+            onReady: () {
+              print('Player is ready.');
+            },
+          ),
+        );
+      },
+    );
+  }
+}
 
 class Ampalaya extends StatelessWidget {
   const Ampalaya({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Remove MaterialApp from here
     return const AmpalayaDetailScreen();
   }
 }
@@ -18,7 +130,11 @@ class AmpalayaDetailScreen extends StatefulWidget {
 }
 
 class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
-  late TextEditingController _descriptionController;
+
+   final storage = FirebaseStorage.instance;
+    // URLs for Firebase images
+    late List<String> imageUrls;
+    late TextEditingController _descriptionController;
 
   @override
   void initState() {
@@ -27,6 +143,25 @@ class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
       text:
           "Ampalaya, or bitter melon, is a tropical fruit with a strong bitter flavor.The fruit has a distinctive warty exterior and an oblong shape. It is hollow in cross-section, with a relatively thin layer of flesh surrounding a central seed cavity filled with large, flat seeds and pith. The fruit is most often eaten green, or as it is beginning to turn yellow. At this stage, the fruit's flesh is crunchy and watery in texture, similar to cucumber, chayote, or green bell pepper, but bitter. The skin is tender and edible. Seeds and pith appear white in unripe fruits; they are not intensely bitter and can be removed before cooking. In traditional medicine, ampalaya is believed to offer health benefits like better blood sugar control and improved digestion, though scientific research is ongoing to confirm these effects.",
     );
+    
+    imageUrls = List.filled(15, ''); // Initialize with empty strings
+    getImagesFromFirebase();
+  }
+
+ Future<void> getImagesFromFirebase() async {
+    List<String> imageNames = [
+      '1.png', '2.png', '3.png', '4.png', '5.png',
+      '6.png', '7.png', '8.png', '9.png', '10.png', '11.png', '12.png',
+      '13.png', '14.png', '15.png',
+    ];
+
+    for (int i = 0; i < imageNames.length; i++) {
+      final ref = storage.ref().child('CropFarming/vegetables/Ampalaya/${imageNames[i]}');
+      final url = await ref.getDownloadURL();
+      setState(() {
+        imageUrls[i] = url;
+      });
+    }
   }
 
   @override
@@ -85,7 +220,7 @@ class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
                 child: Row(
                   children: [
                     Image.asset(
-                      'images/Ampalaya.png',
+                      'images/vegetables/Ampalaya.png',
                       height: 80,
                       width: 80,
                       fit: BoxFit.cover,
@@ -176,7 +311,7 @@ class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
             ),
             const SizedBox(height: 16),
             _buildStepCard(
-                'Step 1: Pre-Germinating the Seeds', 'images/1.png'),
+                'Step 1: Pre-Germinating the Seeds', imageUrls[0]),
                 const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
@@ -189,7 +324,7 @@ class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
               ),
             ),
              _buildStepCard(
-                '', 'images/2.png'),
+                '', imageUrls[1]),
                 const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
@@ -201,7 +336,7 @@ class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
                 ),
               ),
             ),
-            _buildStepCard('','images/3.png'),
+            _buildStepCard('',imageUrls[2]),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
@@ -214,7 +349,7 @@ class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
               ),
             ),
            _buildStepCard(
-                '', 'images/4.png'),
+                '', imageUrls[3]),
                 const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
@@ -227,7 +362,7 @@ class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
               ),
             ),
              _buildStepCard(
-                '', 'images/5.png'),
+                '', imageUrls[4]),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
@@ -242,7 +377,7 @@ class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
             ),
             const SizedBox(height: 24),
             _buildStepCard(
-                'Step 2: Preparing the Sowing Materials:', 'images/6.png'),
+                'Step 2: Preparing the Sowing Materials:', imageUrls[5]),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
@@ -258,7 +393,7 @@ class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
               ),
             ),
             _buildStepCard(
-                '', 'images/7.png'),
+                '', imageUrls[6]),
                 const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
@@ -272,7 +407,7 @@ class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
             ),
 
             _buildStepCard(
-                '', 'images/8.png'),
+                '', imageUrls[7]),
                 const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
@@ -285,7 +420,7 @@ class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
               ),
             ),
             _buildStepCard(
-                '', 'images/9.png'),
+                '', imageUrls[8]),
                 const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
@@ -298,7 +433,7 @@ class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
               ),
             ),
             _buildStepCard(
-                'Step 3. Sowing', 'images/10.png'),
+                'Step 3. Sowing', imageUrls[9]),
                 const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
@@ -311,7 +446,7 @@ class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
               ),
             ),
             _buildStepCard(
-                '', 'images/11.png'),
+                '', imageUrls[10]),
                 const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
@@ -326,7 +461,7 @@ class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
             ),
 
             _buildStepCard(
-                'Step 4. Caring for and maintaining the seedlings:', 'images/12.png'),
+                'Step 4. Caring for and maintaining the seedlings:', imageUrls[11]),
                 const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
@@ -342,12 +477,90 @@ class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
             ),
 
              _buildStepCard(
-                '', 'images/13.png'),
+                '', imageUrls[12]),
                 const Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
                 'd. Plant one seed per hill along the furrows at a distance of 30 to 50 cm between hills. Replant diseased and dead seedlings and missing hills 15 days after emergence.',
                 textAlign: TextAlign.justify,
+                style: TextStyle(
+                  fontSize: 16,
+                  height: 1.5,
+                ),
+              ),
+            ),
+
+            _buildStepCard(
+                'Step 5. Transplanting', imageUrls[13]),
+                const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                'a. Use potlets or seedling trays to grow seedlings.\n'
+                'b. Prepare and mix thoroughly potting medium of 1:1:1 garden soil, Carbonized Rice Hull (CRH) and compost.\n'
+                'c. Fill the container with mix media.\n'
+                'd. Plant one seed per potlet or tray hole filled with a prepared planting media.\n'
+                'e. When the seedlings emerge, water the plants regularly when needed. \n'
+                'f.  When the seedlings are grown, harden them by gradually reducing water application and by exposing them under the sun.\n'
+                'g. Transplant at 15 days after sowing or when true leaves have developed. Do not delay transplanting because this will result to poor plant growth and high mortality. \n'
+                 'Transplant late in the afternoon for higher percentage recovery of seedlings.\n'
+                'h.  Apply starter solution by dissolving one tbsp of urea (46-0-0) to 6 liters of water and use as drench for seedlings at transplanting. After drenching, the seedlings should be sprinkled with clean water immediately to avoid burning effects.\n',
+                textAlign: TextAlign.justify,
+                style: TextStyle(
+                  fontSize: 16,
+                  height: 1.5,
+                ),
+              ),
+            ),
+
+            _buildTitleCard(
+                'Fertilizer Application'),
+                const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                ' a. Apply 10 to 20 tons organic fertilizer per hectare or decomposed animal manure or compost before field preparation to supplement inorganic fertilizer. At planting, apply complete fertilizer (14- 14-14) at the rate of 20 grams or two tbsp per hill. Sidedress with urea at the rate of 10 grams or one tbsp per hill before hilling up (3 to 4 weeks from planting). Repeat application every 2 weeks for at least 2 to 3 times more. Cover the fertilizer with at least 6 cm of soil after application.',
+                textAlign: TextAlign.justify,
+                style: TextStyle(
+                  fontSize: 16,
+                  height: 1.5,
+                ),
+              ),
+            ),
+
+            _buildTitleCard(
+                'Irrigation'),
+                const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                ' a. Irrigate the field when necessary during the growing period of the plant. Furrow irrigation can be applied. Ampalaya cannot tolerate water logging hence a drainage canal should be provided.',
+                textAlign: TextAlign.justify,
+                style: TextStyle(
+                  fontSize: 16,
+                  height: 1.5,
+                ),
+              ),
+            ),
+
+            _buildStepCard(
+                'Pruning', imageUrls[14]),
+                const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                'a. Remove all lateral vines and old leaves from the base up to 1 m above so that nutrients are concentrated on the fruiting branches and fruits. Maintain single or two lateral vines only. This will enhance fruiting ability of the plants with bigger and quality fruits. Cut lateral vines can be sold in the market at a good price for an additional income.',
+                textAlign: TextAlign.justify,
+                style: TextStyle(
+                  fontSize: 16,
+                  height: 1.5,
+                ),
+              ),
+            ),
+
+            _buildTitleCard(
+                'Cultivation and Weeding'),
+                const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                'Off-bar the plants at 7 to 10 days after planting to control weeds. Hill up at 15 to 20 days after off-barring or during the application of sidedress fertilizers. Hand weed the base of the plants regularly to avoid the weeds competing with plants in nutrient and water uptake.',
+                 textAlign: TextAlign.justify,
                 style: TextStyle(
                   fontSize: 16,
                   height: 1.5,
@@ -365,12 +578,8 @@ class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
               ),
             ),
             const SizedBox(height: 8),
-            _buildGuideCard('Ampalaya Farming: How to Grow Ampalaya',
-                'Feb 15, 2016 - 4:45', 'images/guide1.png'),
-            _buildGuideCard(
-                'Ampalaya Farming: How to Grow Ampalaya or Bittergourd',
-                'Feb 16, 2016 - 4:45',
-                'images/guide2.png'),
+            GuideCard(videoId: '0D-2BCZyN1E'),
+            GuideCard(videoId: 'BBuTWmSIpnY'),
           ],
         ),
       ),
@@ -396,7 +605,49 @@ class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
     );
   }
 
-  Widget _buildStepCard(String stepTitle, String imagePath) {
+  Widget _buildStepCard(String stepTitle, String imageUrl) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8.0),
+    child: Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Text(
+              stepTitle,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          imageUrl.isNotEmpty
+              ? Container(
+                  width: double.infinity, // Fill the width of the device
+                  child: Image.network(  
+                    imageUrl,
+                    height: 200,
+                    fit: BoxFit.cover, // Adjust this to fit your needs
+                  ),
+                )
+              : const SizedBox(
+                  height: 150,
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+        ],
+      ),
+    )
+   );
+  }
+}
+
+
+  Widget _buildTitleCard(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Card(
@@ -404,25 +655,15 @@ class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Text(
-                stepTitle,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
-            Image.asset(
-              imagePath,
-              height: 150,
-              fit: BoxFit.cover,
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -446,4 +687,3 @@ class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
       ),
     );
   }
-}

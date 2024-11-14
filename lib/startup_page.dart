@@ -95,10 +95,11 @@ class _StartupPageState extends State<StartupPage> {
 
                   Container(
                     padding: const EdgeInsets.all(20),
-                    child: Image.asset(
-                      'images/AgriTek.png', // Ensure the logo path is correct
+                    child: 
+                      const Image(
+                      image: AssetImage('images/AgriTek.png'),
                       height: 150,
-                    ),
+                    )
                   ),
 
                   const Text(

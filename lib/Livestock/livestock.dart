@@ -101,7 +101,7 @@ class LivestockScreenState extends State<LivestockScreen> {
               width: double.infinity, // This makes the button fill the width
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/croptypes');
+                  Navigator.pushNamed(context, '/livestocklist');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
