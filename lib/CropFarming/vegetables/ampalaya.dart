@@ -89,7 +89,7 @@ class _GuideCardState extends State<GuideCard> {
   void _showYoutubePlayerDialog(String videoId) {
     YoutubePlayerController _controller = YoutubePlayerController(
       initialVideoId: videoId,
-      flags: YoutubePlayerFlags(
+      flags: const YoutubePlayerFlags(
         autoPlay: true,
         mute: false,
       ),
@@ -578,8 +578,8 @@ class AmpalayaDetailScreenState extends State<AmpalayaDetailScreen> {
               ),
             ),
             const SizedBox(height: 8),
-            GuideCard(videoId: '0D-2BCZyN1E'),
-            GuideCard(videoId: 'BBuTWmSIpnY'),
+            const GuideCard(videoId: '0D-2BCZyN1E'),
+            const GuideCard(videoId: 'BBuTWmSIpnY'),
           ],
         ),
       ),

@@ -682,7 +682,7 @@ class ChickenDetailScreenState extends State<ChickenDetailScreen> {
             ),
           ),
           imageUrl.isNotEmpty
-              ? Container(
+              ? SizedBox(
                   width: double.infinity, // Fill the width of the device
                   child: Image.network(  
                     imageUrl,
@@ -746,7 +746,7 @@ class ChickenDetailScreenState extends State<ChickenDetailScreen> {
             ),
           ),
           imageUrl.isNotEmpty
-              ? Container(
+              ? SizedBox(
                   width: double.infinity, // Fill the width of the device
                   child: Image.network(  
                     imageUrl,

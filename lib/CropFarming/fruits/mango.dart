@@ -3,6 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GuideCard extends StatefulWidget {
   final String videoId;
@@ -89,7 +90,7 @@ class _GuideCardState extends State<GuideCard> {
   void _showYoutubePlayerDialog(String videoId) {
     YoutubePlayerController _controller = YoutubePlayerController(
       initialVideoId: videoId,
-      flags: YoutubePlayerFlags(
+      flags: const YoutubePlayerFlags(
         autoPlay: true,
         mute: false,
       ),
@@ -130,60 +131,47 @@ class MangoDetailScreen extends StatefulWidget {
 }
 
 class MangoDetailScreenState extends State<MangoDetailScreen> {
-
-   final storage = FirebaseStorage.instance;
-    // URLs for Firebase images
-    late List<String> imageUrls;
-    late TextEditingController _descriptionController;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Map<String, dynamic>? mangoData;
 
   @override
   void initState() {
     super.initState();
-    _descriptionController = TextEditingController(
-      text:
-          "A mango is a popular tropical fruit that is eaten in sweet and savory dishes around the world. It can be green, yellow, orange, red, or a combination of these colors, and has yellow or orange flesh surrounding a flat, hard pit. "
-          );
-    
-    imageUrls = List.filled(15, ''); // Initialize with empty strings
-    getImagesFromFirebase();
+    getMangoDataFromFirestore();
   }
 
- Future<void> getImagesFromFirebase() async {
-    List<String> imageNames = [
-      '1.png', '2.png', '3.png',
-    ];
+  Future<void> getMangoDataFromFirestore() async {
+    try {
+      DocumentSnapshot snapshot = await _firestore.collection('Fruits').doc('mango').get();
 
-    for (int i = 0; i < imageNames.length; i++) {
-      final ref = storage.ref().child('CropFarming/fruits/Mango/${imageNames[i]}');
-      final url = await ref.getDownloadURL();
-      setState(() {
-        imageUrls[i] = url;
-      });
+      if (snapshot.exists) {
+        setState(() {
+          mangoData = snapshot.data() as Map<String, dynamic>;
+        });
+      } else {
+        print("Mango document not found.");
+      }
+    } catch (e) {
+      print('Error fetching mango data: $e');
     }
   }
 
-  @override
-  void dispose() {
-    _descriptionController.dispose();
-    super.dispose();
-  }
-
-  void _onBottomNavItemTapped(int index) {
-    switch (index) {
-      case 0:
-        Navigator.pushNamed(context, '/home');
-        break;
-      case 1:
-        // Handle other navigation items if needed
-        break;
-      case 2:
-        // Handle other navigation items if needed
-        break;
+  Future<String> fetchFirebaseImage(String gsUrl) async {
+    try {
+      final ref = FirebaseStorage.instance.refFromURL(gsUrl);
+      return await ref.getDownloadURL();
+    } catch (e) {
+      print('Error fetching image URL: $e');
+      return ''; // Return empty string as fallback
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (mangoData == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Fruits'),
@@ -191,7 +179,7 @@ class MangoDetailScreenState extends State<MangoDetailScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context); // Proper back navigation
+            Navigator.pop(context);
           },
         ),
         actions: [
@@ -208,263 +196,162 @@ class MangoDetailScreenState extends State<MangoDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'images/fruits/mango.jpg',
-                      height: 80,
-                      width: 80,
-                      fit: BoxFit.cover,
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Mango',
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Mangifera indica',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontStyle: FontStyle.italic,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            'Published date',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontStyle: FontStyle.italic,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            _buildMangoCard(),
             const SizedBox(height: 24),
-            const Text(
-              'Description',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 12),
+            _buildSectionTitle('Description'),
             Text(
-              _descriptionController.text,
-              textAlign: TextAlign.left,
-              style: const TextStyle(
-                fontSize: 16,
-                height: 1.5,
-              ),
+              mangoData!['description'],
+              style: const TextStyle(fontSize: 16, height: 1.5),
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Materials and Tools Needed:',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              '• Mango Seeds\n'
-              '• Water\n'
-              '• Paper Towel\n'
-              '• Strong Scissor(Kitchen Shear)',
-              style: TextStyle(
-                fontSize: 16,
-                height: 1.5,
-              ),
+            _buildSectionTitle('Materials and Tools Needed:'),
+            Text(
+              (mangoData!['materials'] as List<dynamic>).join('\n'),
+              style: const TextStyle(fontSize: 16, height: 1.5),
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Step-by-Step Guide to Planting Mango:',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            _buildSectionTitle('Step-by-Step Guide to Planting Mango:'),
             const SizedBox(height: 16),
-            _buildStepCard(
-                'Seed Preparation', imageUrls[0]),
-                const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                'a.  Cut open mango to remove seed. The seed will be inside a husk.\n'
-                'b. Clean the seed husk.',                
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontSize: 16,
-                  height: 1.5,
-                ),
-              ),
-            ),
-             _buildStepCard(
-                '', imageUrls[1]),
-                const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                'a. Using a pair of strong scissors, such as kitchen shears, carefully cut the edge of the seed husk, allowing you to open the husk and remove the seed. The seed will be slippery, so proceed with caution.\n'
-                'b. Soak the seed in a cup of water for 24 hours.\n '
-                'c. Moisten a paper towel. Make sure it is damp throughout, but not soaking wet. Wrap the seed in the paper towel.\n'
-                'd. Place the seed and paper towel inside a sandwich bag, and store the seed in a warm place.\n'
-                "e. Monitor the seed’s progress every few days, watching for sprouts. Germination time will depend on air temperature and the mango’s ripeness when the seed was extracted. ",
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontSize: 16,
-                  height: 1.5,
-                ),
-              ),
-            ),
-            _buildStepCard('',imageUrls[2]),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                'a. Plant the seed in potting soil, making sure not to cover the new leaves.\n'
-                'b. Water it Daily giving right amount of Water.',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontSize: 16,
-                  height: 1.5,
-                ),
-              ),
-            ),
+            ..._buildStepCards(),
             const SizedBox(height: 24),
             const Divider(),
-            const Text(
-              'Explore More Guides',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            _buildSectionTitle('Explore More Guides'),
             const SizedBox(height: 8),
-            GuideCard(videoId: 'L3mpeni4dHA'),
-            GuideCard(videoId: 'ZGVPDvEzdh4'),
+            if ((mangoData!['videoIds'] as List<dynamic>).isNotEmpty)
+              ...mangoData!['videoIds'].map<Widget>((videoId) {
+                return GuideCard(videoId: videoId);
+              }).toList()
+            else
+              const Text('No videos available.', style: TextStyle(color: Colors.grey)),
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.green,
-        unselectedItemColor: Colors.grey,
-        onTap: _onBottomNavItemTapped,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.view_module),
-            label: 'Modules',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.forum),
-            label: 'Forums',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Updates',
-          ),
-        ],
-      ),
+      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
-  Widget _buildStepCard(String stepTitle, String imageUrl) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8.0),
-    child: Card(
+  Widget _buildMangoCard() {
+    return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Text(
-              stepTitle,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          children: [
+            Image.asset(
+              'images/fruits/mango.jpg', // Local mango image
+              height: 80,
+              width: 80,
+              fit: BoxFit.cover,
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    mangoData!['title'],
+                    style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    mangoData!['scientificName'],
+                    style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic, color: Colors.grey[600]),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Published date: ${mangoData!['publishedDate']}',
+                    style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic, color: Colors.grey),
+                  ),
+                ],
               ),
             ),
-          ),
-          imageUrl.isNotEmpty
-              ? Container(
-                  width: double.infinity, // Fill the width of the device
-                  child: Image.network(  
-                    imageUrl,
-                    height: 250,
-                    fit: BoxFit.cover, // Adjust this to fit your needs
-                  ),
-                )
-              : const SizedBox(
-                  height: 150,
-                  child: Center(child: CircularProgressIndicator()),
-                ),
-        ],
+          ],
+        ),
       ),
-    )
-   );
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Text(
+      title,
+      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    );
+  }
+
+  List<Widget> _buildStepCards() {
+    return List.generate(mangoData!['steps'].length, (index) {
+      var step = mangoData!['steps'][index];
+      return FutureBuilder<String>(
+        future: fetchFirebaseImage(step['imageUrl']),
+        builder: (context, snapshot) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Text(
+                        step['title'],
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    snapshot.connectionState == ConnectionState.done && snapshot.hasData
+                        ? Image.network(
+                            snapshot.data!,
+                            height: 250,
+                            fit: BoxFit.cover,
+                          )
+                        : const SizedBox(
+                            height: 150,
+                            child: Center(child: CircularProgressIndicator()),
+                          ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  step['description'],
+                  textAlign: TextAlign.left,
+                  style: const TextStyle(fontSize: 16, height: 1.5),
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+          );
+        },
+      );
+    });
+  }
+
+  Widget _buildBottomNavigationBar() {
+    return BottomNavigationBar(
+      selectedItemColor: Colors.green,
+      unselectedItemColor: Colors.grey,
+      onTap: (index) {
+        switch (index) {
+          case 0:
+            Navigator.pushNamed(context, '/home');
+            break;
+          case 1:
+            // Navigate to forums
+            break;
+          case 2:
+            // Navigate to updates
+            break;
+        }
+      },
+      items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.view_module), label: 'Modules'),
+        BottomNavigationBarItem(icon: Icon(Icons.forum), label: 'Forums'),
+        BottomNavigationBarItem(icon: Icon(Icons.notifications), label: 'Updates'),
+      ],
+    );
   }
 }
-
-
-  Widget _buildTitleCard(String title) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Text(
-            title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGuideCard(String title, String date, String imagePath) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      child: ListTile(
-        leading: Image.asset(
-          imagePath,
-          width: 100,
-          height: 100,
-          fit: BoxFit.cover,
-        ),
-        title: Text(title),
-        subtitle: Text(date),
-        onTap: () {
-          // Handle guide tap
-        },
-      ),
-    );
-  }

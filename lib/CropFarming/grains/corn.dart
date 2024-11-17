@@ -299,7 +299,7 @@ class CornDetailScreenState extends State<CornDetailScreen> {
             ),
           ),
           imageUrl.isNotEmpty
-              ? Container(
+              ? SizedBox(
                   width: double.infinity, // Fill the width of the device
                   child: Image.network(  
                     imageUrl,

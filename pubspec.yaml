@@ -40,6 +40,7 @@ dependencies:
   geocoding: ^2.0.5
   intl: ^0.17.0
   youtube_player_flutter: ^9.1.1
+  cloud_firestore: ^5.4.4
   
 
 dev_dependencies:
