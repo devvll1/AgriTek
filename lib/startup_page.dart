@@ -57,183 +57,152 @@ class _StartupPageState extends State<StartupPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFF00C853), // Darker green
-                Color(0xFF00E676), // Lighter green
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
+        body: Stack(
+          children: [
+            // Background Gradient
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFF00C853), // Darker green
+                    Color(0xFF00E676), // Lighter green
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
             ),
-          ),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0), // Adjusted padding for proper alignment
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 16.0), // Fixed padding for better spacing
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/home');
-                        },
-                        child: const Text(
-                          "Skip",
+            // Main Content
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Logo Section
+                    Column(
+                      children: [
+                        const Icon(
+                          Icons.agriculture,
+                          size: 100,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(height: 10),
+                        const Text(
+                          "Welcome to AgriTek",
                           style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
                             color: Colors.white,
-                            fontSize: 16,
                           ),
                         ),
+                        const SizedBox(height: 40),
+                      ],
+                    ),
+                    // Input Fields
+                    TextField(
+                      controller: _controllerEmail,
+                      decoration: InputDecoration(
+                        labelText: "Email Address",
+                        labelStyle: const TextStyle(color: Colors.white),
+                        filled: true,
+                        fillColor: Colors.white.withOpacity(0.2),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
+                        ),
+                        prefixIcon: const Icon(Icons.email, color: Colors.white),
                       ),
+                      style: const TextStyle(color: Colors.white),
+                      cursorColor: Colors.white,
                     ),
-                  ),
-
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    child: 
-                      const Image(
-                      image: AssetImage('images/AgriTek.png'),
-                      height: 150,
-                    )
-                  ),
-
-                  const Text(
-                    'AgriTek',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 35,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2.0,
-                    ),
-                  ),
-
-                  const Text(
-                    'Your Agriculture Companion',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 15,
-                    ),
-                  ),
-
-                  const SizedBox(height: 25),
-
-                  const Text(
-                    'Login to get started',
-                    style: TextStyle(
-                      color: Color.fromARGB(220, 255, 255, 255),
-                      fontSize: 18,
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  TextField(
-                    controller: _controllerEmail,
-                    decoration: InputDecoration(
-                      labelText: 'Email/Phone',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: _controllerPassword,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: "Password",
+                        labelStyle: const TextStyle(color: Colors.white),
+                        filled: true,
+                        fillColor: Colors.white.withOpacity(0.2),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
+                        ),
+                        prefixIcon: const Icon(Icons.lock, color: Colors.white),
                       ),
-                      filled: true,
-                      fillColor: Colors.grey[200],
+                      style: const TextStyle(color: Colors.white),
+                      cursorColor: Colors.white,
                     ),
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  // Password field
-                  TextField(
-                    controller: _controllerPassword,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                    ),
-                  ),
-
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {
-                        // Handle forgot password
-                      },
-                      child: const Text(
-                        "Forgot Password?",
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 255, 255, 255),
-                          fontSize: 14,
+                    const SizedBox(height: 10),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {
+                          // Handle forgot password
+                        },
+                        child: const Text(
+                          "Forgot Password?",
+                          style: TextStyle(color: Colors.yellowAccent),
                         ),
                       ),
                     ),
-                  ),
-
-                  const SizedBox(height: 25),
-
-                  SizedBox(
-                    width: 180,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        backgroundColor: const Color(0xFF007E33), // Darker green for button
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
+                    const SizedBox(height: 20),
+                    // Login/Register Button
+                    ElevatedButton(
                       onPressed: isLogin
                           ? signInWithEmailAndPassword
                           : createUserWithEmailAndPassword,
-                      child: Text(
-                        isLogin ? 'Sign-In' : 'Register',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green.shade700,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
                         ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 50, vertical: 15),
+                      ),
+                      child: Text(
+                        isLogin ? 'Login' : 'Register',
+                        style: const TextStyle(fontSize: 16, color: Colors.white),
                       ),
                     ),
-                  ),
-
-                  const SizedBox(height: 25),
-
-                  // Toggle between Login and Register
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        isLogin ? "Not a member?" : "Already registered?",
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                      TextButton(
-                        onPressed: toggleForm,
-                        child: Text(
-                          isLogin ? "Register now" : "Login",
-                          style: const TextStyle(
-                            color: Colors.white,
+                    const SizedBox(height: 20),
+                    // Toggle Login/Register
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          isLogin
+                              ? "New to AgriTek? "
+                              : "Already registered? ",
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                        TextButton(
+                          onPressed: toggleForm,
+                          child: Text(
+                            isLogin ? "Sign Up" : "Login",
+                            style: const TextStyle(
+                              color: Colors.yellowAccent,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-
-                  // Display error messages
-                  if (errorMessage != null && errorMessage!.isNotEmpty)
-                    Text(
-                      errorMessage!,
-                      style: const TextStyle(color: Colors.red),
+                      ],
                     ),
-                ],
+                    // Error Message
+                    if (errorMessage != null && errorMessage!.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Text(
+                          errorMessage!,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );
