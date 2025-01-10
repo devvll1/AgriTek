@@ -72,33 +72,20 @@ class CustomSearchDelegate extends SearchDelegate {
 }
 
 // Main Application
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primaryColor: Colors.green,
-      ),
-      home: const HomePage(),
-    );
-  }
-}
 
 // Home Page
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class FarmGuidePage extends StatefulWidget {
+  const FarmGuidePage({super.key});
 
   Future<void> signOut() async {
     await Auth().signOut();
   }
 
   @override
-  HomePageState createState() => HomePageState();
+  FarmGuidePageState createState() => FarmGuidePageState();
 }
 
-class HomePageState extends State<HomePage> {
+class FarmGuidePageState extends State<FarmGuidePage> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -160,7 +147,7 @@ class HomePageState extends State<HomePage> {
               title: const Text('Home'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushReplacementNamed(context, '/home');
+                Navigator.pushReplacementNamed(context, '/homepage');
               },
             ),
             ListTile(
@@ -231,18 +218,6 @@ class HomePageState extends State<HomePage> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        selectedItemColor: Colors.green,
-        unselectedItemColor: Colors.grey,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Modules'),
-          BottomNavigationBarItem(icon: Icon(Icons.forum), label: 'Forums'),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications), label: 'Updates'),
-        ],
       ),
     );
   }

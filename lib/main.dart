@@ -15,12 +15,17 @@ import 'package:agritek/Forestry/forestry.dart';
 import 'package:agritek/Livestock/chicken.dart';
 import 'package:agritek/Livestock/livestock.dart';
 import 'package:agritek/Livestock/livestocklist.dart';
+import 'package:agritek/Login/profile.dart';
+import 'package:agritek/Login/profilesetup.dart';
 import 'package:agritek/Updates/weather.dart';
+import 'package:agritek/Updates/weekforecast.dart';
+import 'package:agritek/homepage.dart';
 import 'package:flutter/material.dart';
-import 'package:agritek/home_page.dart';
-import 'package:agritek/startup_page.dart';
+import 'package:agritek/farmguide.dart';
+import 'package:agritek/Login/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+
 
 // Your custom color class
 class AppColor {
@@ -52,7 +57,10 @@ class MyApp extends StatelessWidget {
       home: const WidgetTree(),
       routes: {
         '/login': (context) => const StartupPage(),
-        '/home': (context) => const HomePage(),
+        '/profileSetup': (context) => const ProfileSetupPage(),
+        '/profile': (context) => const ProfilePage(),
+        '/homepage': (context) => const HomePage(),
+        '/home': (context) => const FarmGuidePage(),
         '/cropfarming': (context) => const CropFarmingScreen(),
         '/forestry' : (context) => const ForestryScreen(),
         '/aquaculture' : (context) => const AquacultureScreen(),
@@ -77,7 +85,8 @@ class MyApp extends StatelessWidget {
         '/legumes': (context) => const LegumesApp(),
         
         
-        '/weather' : (context) => const WeatherScreen()
+        '/weather' : (context) => const WeatherScreen(),
+        '/forecast' : (context) => const SevenDaysForecastScreen()
       },
     );
   }
