@@ -47,3 +47,14 @@ plugins {
 flutter {
     source = "../.."
 }
+
+dependencies { 
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // Kotlin Standard Library 
+    // implementation 'androidx.core:core-ktx:1.6.0' // AndroidX Core KTX 
+    // implementation 'androidx.appcompat:appcompat:1.3.1' // AndroidX AppCompat 
+    // implementation 'com.google.android.material:material:1.4.0' // Material Components 
+    // implementation 'androidx.constraintlayout:constraintlayout:2.1.0' // ConstraintLayout 
+    // testImplementation 'junit:junit:4.13.2' // JUnit for Testing 
+    // androidTestImplementation 'androidx.test.ext:junit:1.1.3' // AndroidX Test 
+    // androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0' // Espresso for UI Testing 
+}

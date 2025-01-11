@@ -86,10 +86,8 @@ class FarmGuidePage extends StatefulWidget {
 }
 
 class FarmGuidePageState extends State<FarmGuidePage> {
-  int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
-    setState(() => _selectedIndex = index);
 
     switch (index) {
       case 0:

@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        fontFamily: 'Urbanist',
+        fontFamily: 'Poppins',
         scaffoldBackgroundColor: AppColor.background,
         // You can add more theme properties here
       ),

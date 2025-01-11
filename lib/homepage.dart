@@ -1,9 +1,12 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:agritek/Forums/forumfeed.dart';
 import 'package:agritek/Login/profile.dart';
 import 'package:agritek/Track/calendar.dart';
 import 'package:agritek/Updates/weather.dart';
-import 'package:agritek/farmguide.dart'; 
-import 'package:flutter/material.dart';
+import 'package:agritek/farmguide.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -62,132 +65,161 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.green,
-        leading: IconButton(
-          icon: const Icon(Icons.person, color: Colors.white),
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: isLoading
+            ? const Text("Welcome!", style: TextStyle(fontFamily: 'Poppins'))
+            : Text("Welcome ${firstName ?? ''}!", style: TextStyle(fontFamily: 'Poppins')),
+        leading: CupertinoButton(
+          padding: EdgeInsets.zero,
           onPressed: () {
-            // Navigate to the Profile Page
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const ProfilePage()),
+              CupertinoPageRoute(builder: (context) => const ProfilePage()),
             );
           },
+          child: const Icon(CupertinoIcons.profile_circled, color: CupertinoColors.systemGreen),
         ),
-        title: isLoading
-            ? const Text("Welcome!", style: TextStyle(color: Colors.white))
-            : Text(
-                "Welcome ${firstName ?? ''}!",
-                style: const TextStyle(color: Colors.white),
-              ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-              Navigator.pushReplacementNamed(context, '/login'); // Navigate to the login page
-            },
-            icon: const Icon(Icons.logout, color: Colors.white),
-          ),
-        ],
+        trailing: CupertinoButton(
+          padding: EdgeInsets.zero,
+          onPressed: () {
+            _showSignOutConfirmation(context);
+          },
+          child: const Icon(CupertinoIcons.arrow_right_square, color: CupertinoColors.systemGreen),
+        ),
       ),
-      body: Container(
-        color: Colors.lightGreen[200],
+      child: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 18),
             const Text(
-              "AgriTek",
+              "AGRITEK",
               style: TextStyle(
                 fontSize: 28,
+                color: CupertinoColors.black,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                fontFamily: 'Poppins',
+                decoration: TextDecoration.none,
               ),
             ),
             const Text(
               "Your Farming Companion",
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.black54,
+                color: CupertinoColors.systemGrey,
+                fontFamily: 'Poppins',
+                decoration: TextDecoration.none,
               ),
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 40),
             Expanded(
               child: GridView.count(
-                padding: const EdgeInsets.symmetric(horizontal: 50), // Reduce padding
-                crossAxisCount: 2,
-                crossAxisSpacing: 30, // Reduce spacing between columns
-                mainAxisSpacing: 30, // Reduce spacing between rows
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                crossAxisCount: 4,
+                crossAxisSpacing: 10,
                 children: [
-                  _buildMenuButton("Agricultural Guides", context, const FarmGuidePage(), Icons.book),
-                  _buildMenuButton("Community", context, const ForumsPage(), Icons.group),
-                  _buildMenuButton("Updates", context, const WeatherScreen(), Icons.cloud),
-                  _buildMenuButton("Track", context, const CalendarScreen(), Icons.calendar_today),
+                  _buildMenuButton("Agricultural Guides", context, const FarmGuidePage(), CupertinoIcons.book),
+                  _buildMenuButton("Community", context, const ForumsPage(), CupertinoIcons.group),
+                  _buildMenuButton("Updates", context, const WeatherScreen(), CupertinoIcons.cloud),
+                  _buildMenuButton("Track", context, const CalendarScreen(), CupertinoIcons.calendar),
                 ],
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 20),
+              padding: const EdgeInsets.only(bottom: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextButton(
+                  CupertinoButton(
                     onPressed: () {},
-                    child: const Text("Contact us"),
+                    child: const Text("Contact us", style: TextStyle(fontFamily: 'Poppins')),
                   ),
-                  const Text(" | "),
-                  TextButton(
+                  const Text(
+                    " | ",
+                    style: TextStyle(
+                      fontSize: 25,
+                      decoration: TextDecoration.none,
+                      fontFamily: 'Poppins',
+                    ),
+                  ),
+                  CupertinoButton(
                     onPressed: () {},
-                    child: const Text("About Us"),
+                    child: const Text("About Us", style: TextStyle(fontFamily: 'Poppins')),
                   ),
                 ],
               ),
             ),
             const Text(
               "All rights Reserved.",
-              style: TextStyle(fontSize: 12, color: Colors.black54),
+              style: TextStyle(
+                fontSize: 10,
+                fontFamily: 'Poppins',
+                decoration: TextDecoration.none,
+                color: CupertinoColors.systemGrey,
+              ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
           ],
         ),
       ),
     );
   }
 
+  void _showSignOutConfirmation(BuildContext context) {
+    showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: const Text("Sign Out", style: TextStyle(fontFamily: 'Poppins')),
+          content: const Text("Are you sure you want to sign out?", style: TextStyle(fontFamily: 'Poppins')),
+          actions: [
+            CupertinoDialogAction(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog without signing out
+              },
+              child: const Text("Cancel", style: TextStyle(fontFamily: 'Poppins')),
+            ),
+            CupertinoDialogAction(
+              isDestructiveAction: true, // Highlights the destructive action
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                FirebaseAuth.instance.signOut(); // Sign out the user
+                Navigator.pushReplacementNamed(context, '/login'); // Navigate to the login screen
+              },
+              child: const Text("Sign Out", style: TextStyle(fontFamily: 'Poppins')),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _buildMenuButton(String title, BuildContext context, Widget page, IconData icon) {
     return AspectRatio(
-      aspectRatio: 1, // Makes buttons square-like
-      child: ElevatedButton(
+      aspectRatio: 1,
+      child: CupertinoButton(
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => page),
+            CupertinoPageRoute(builder: (context) => page),
           );
         },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color.fromARGB(255, 96, 184, 154),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50),
-          ),
-          padding: const EdgeInsets.all(10),
-        ),
+        color: CupertinoColors.systemGrey4,
+        padding: const EdgeInsets.all(5),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              size: 40,
-              color: Colors.white,
-            ),
-            const SizedBox(height: 8),
+            Icon(icon, size: 35, color: CupertinoColors.systemGreen),
+            const SizedBox(height: 5),
             Text(
               title,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
-                fontSize: 14,
+                color: CupertinoColors.black,
+                fontSize: 12,
+                fontFamily: 'Poppins',
               ),
             ),
           ],

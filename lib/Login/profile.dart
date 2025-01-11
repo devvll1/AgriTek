@@ -1,6 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -16,6 +21,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Map<String, dynamic>? userData;
   bool isLoading = true;
+
+  File? _profileImage; // To store the picked image
+  final ImagePicker _imagePicker = ImagePicker();
 
   final List<String> farmerTypes = [
     'Crop Farmer',
@@ -79,8 +87,58 @@ class _ProfilePageState extends State<ProfilePage> {
     selectedFarmerType = userData?['farmerType'];
   }
 
+  Future<void> _pickImage() async {
+  // Request storage permissions
+  final status = await Permission.storage.request();
+
+  if (status.isGranted) {
+    // If permission is granted, pick an image
+    final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _profileImage = File(pickedFile.path);
+      });
+    }
+  } else if (status.isDenied) {
+    // If permission is denied, show a message
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Storage permission is required to pick an image.')),
+    );
+  } else if (status.isPermanentlyDenied) {
+    // If permission is permanently denied, prompt the user to enable it in settings
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Please enable storage permission in settings.')),
+    );
+    await openAppSettings();
+  }
+}
+
+  Future<String?> _uploadImageAndSaveProfile(String userId) async {
+    try {
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('profile_images')
+          .child('$userId.jpg');
+
+      final uploadTask = await storageRef.putFile(_profileImage!);
+      final downloadUrl = await uploadTask.ref.getDownloadURL();
+
+      return downloadUrl;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error uploading image: $e')),
+      );
+      return null;
+    }
+  }
+
   Future<void> _saveChanges() async {
     if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      isLoading = true; // Show a loading indicator while saving
+    });
 
     try {
       final User? user = FirebaseAuth.instance.currentUser;
@@ -92,6 +150,7 @@ class _ProfilePageState extends State<ProfilePage> {
         return;
       }
 
+      // Collect updated data
       final updatedData = {
         'firstName': _controllers['firstName']!.text.trim(),
         'middleName': _controllers['middleName']!.text.trim(),
@@ -101,10 +160,16 @@ class _ProfilePageState extends State<ProfilePage> {
         'farmerType': selectedFarmerType,
       };
 
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .update(updatedData);
+      // Update the profile image if there's a new image
+      if (_profileImage != null) {
+        final profileImageUrl = await _uploadImageAndSaveProfile(user.uid);
+        if (profileImageUrl != null) {
+          updatedData['profileImageUrl'] = profileImageUrl;
+        }
+      }
+
+      // Update Firestore with all user data
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).update(updatedData);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Profile updated successfully.')),
@@ -113,6 +178,10 @@ class _ProfilePageState extends State<ProfilePage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error saving profile: $e')),
       );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -120,6 +189,12 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(CupertinoIcons.back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         title: const Text('Profile'),
         backgroundColor: Colors.green,
       ),
@@ -139,6 +214,25 @@ class _ProfilePageState extends State<ProfilePage> {
                               fontSize: 24, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 20),
+                        GestureDetector(
+                          onTap: _pickImage,
+                          child: CircleAvatar(
+                            radius: 50,
+                            backgroundImage: _profileImage != null
+                                ? FileImage(_profileImage!)
+                                : (userData?['profileImageUrl'] != null
+                                    ? NetworkImage(userData!['profileImageUrl'])
+                                    : const AssetImage('assets/images/defaultprofile.png'))
+                                    as ImageProvider,
+                            child: _profileImage == null
+                                ? const Icon(
+                                    CupertinoIcons.camera,
+                                    size: 40,
+                                  )
+                                : null,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
                         Expanded(
                           child: ListView(
                             children: [
@@ -151,18 +245,20 @@ class _ProfilePageState extends State<ProfilePage> {
                             ],
                           ),
                         ),
-                        ElevatedButton(
+                        ElevatedButton.icon(
                           onPressed: _saveChanges,
+                          icon: const Icon(CupertinoIcons.check_mark),
+                          label: const Text(
+                            'Save Changes',
+                            style: TextStyle(fontSize: 15, color: Colors.white),
+                          ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
-                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 30),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
-                          ),
-                          child: const Text(
-                            'Save Changes',
-                            style: TextStyle(fontSize: 18, color: Colors.white),
                           ),
                         ),
                       ],

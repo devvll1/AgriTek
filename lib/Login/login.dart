@@ -168,7 +168,7 @@ Future<void> signInWithEmailAndPassword() async {
                   Column(
                     children: [
                       Image.asset(
-                        '/images/agritek.png',
+                        'assets/images/agritek.png',
                         height: 100,
                         width: 100,
                         fit: BoxFit.cover,

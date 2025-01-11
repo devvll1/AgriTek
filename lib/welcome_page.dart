@@ -128,7 +128,27 @@ class _WelcomePageState extends State<WelcomePage> {
               ),
             ),
             const SizedBox(height: 30),
-            // "Get Started" Button
+            // Next Button or Get Started Button
+            if (_currentPage < _titles.length - 1)
+              ElevatedButton(
+                onPressed: () {
+                  _pageController.nextPage(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text(
+                  "Next",
+                  style: TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ),
             if (_currentPage == _titles.length - 1)
               ElevatedButton(
                 onPressed: _requestPermissions,
